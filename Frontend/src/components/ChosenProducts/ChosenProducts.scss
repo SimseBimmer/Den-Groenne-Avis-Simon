@@ -1,0 +1,81 @@
+@import '../../styles/variables.scss';
+
+// Udvalgte produkter sektion
+#chosenProducts {
+    width: 70%;
+    margin: 2rem auto;
+
+    h2 {
+        font-family: $font-main;
+        font-size: 20px;
+        font-weight: 400;
+        margin: 1rem 0 .5rem 0;
+    }
+
+    // container til produkterne
+    #chosenProductsRow {
+
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+        padding-bottom: 1rem;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        // scrollbar
+        scrollbar-width: thin;
+        scrollbar-color: $color-primary-green transparent;
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+    }
+
+    // Enkelt produkt
+    .chosenProduct {
+        position: relative;
+        min-width: 187px;
+        height: 187px;
+        overflow: hidden;
+        cursor: pointer;
+
+        transition: box-shadow 0.2s;
+        background: $color-bg-white;
+
+        img {
+            width: 187px;
+            height: 187px;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.2s;
+        }
+
+        // Produkt titel (vises kun ved hover)
+        .productTitle {
+            position: absolute;
+            text-align: center;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: $color-primary-green;
+            color: $color-bg-white;
+            font-size: 1rem;
+            padding: 0.5rem;
+            opacity: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            max-width: 100%;
+        }
+
+        &:hover {
+
+            .productTitle {
+                opacity: 1;
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+@import '../../styles/variables.scss';
+
+// Grøn divider
+#greenDivider {
+  width: 100%;
+  height: 4px;
+  background: $color-primary-green;
+  border: none;
+}

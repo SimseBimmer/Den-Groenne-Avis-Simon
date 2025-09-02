@@ -6,79 +6,75 @@ import Logo from '../../assets/images/Logo.svg';
 import ArrowImg from '../../assets/images/Navbar Active.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-// Header til produktsider med slideshow og kategori-nav
+// Header-komponent til toppen af siden
 export default function HeaderComponent(props) {
-  // loader kategorier fra backend
-  const [categories, setCategories] = useState([]);
-  const { selectedCategory, setSelectedCategory } = props;
   const navigate = useNavigate();
 
-  // Hent kategorier fra backend når component loader
-  useEffect(() => {
-    fetch('http://localhost:3000/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(() => setCategories([]));
-  }, []);
+  // Dummy login check (skal laves rigtigt senere)
+  const isLoggedIn = false;
 
-  // finder index af valgt kategori (til pilen)
-  let selectedIdx = -1;
-  for (let i = 0; i < categories.length; i++) {
-    if (selectedCategory && categories[i].slug === selectedCategory.slug) {
-      selectedIdx = i;
-    }
-  }
-
-  function handleCategoryClick(cat) {
-    if (setSelectedCategory) {
-      setSelectedCategory(cat);
+  // Klik på konto-ikon: gå til minside hvis logget ind, ellers login
+  function handleAccountClick(e) {
+    e.preventDefault();
+    if (isLoggedIn) {
+      navigate("/minside");
     } else {
-      // Naviger til produkter med valgt kategori i query
-      navigate(`/produkter?category=${cat.slug}`);
+      navigate("/login");
     }
   }
 
   return (
     <div id='HeaderComponent'>
       <header>
-        {/* slideshow øverst */}
-        <div id='SlideShowContainer'>
-          <Slideshow />
-          <div id='SlideshowOverlay'>
-            {/* logo og navigation */}
-            <div id='GlobalHeader'>
-              <NavLink to="/">
-                <img src={Logo} alt="Site Logo" />
-              </NavLink>
-              <div id='NavContainer'>
-                <NavComponent />
-              </div>
+        <div id="headerContainer">
+          <div>
+            <h1>Den Grønne<span>Avis</span></h1>
+          </div>
+          <div id='headerRight'>
+            {/* choose category */}
+            <div id='categoryDropdown'>
+              <p>Vælg kategori</p>
+              <img src="/src/assets/images/Expand Arrow.svg" alt="" />
+              {/* Dropdown menu */}
+              <ul id="dropdownMenu" style={{ display: "none" }}>
+                {/* Her skal der mappes kategorier ind senere */}
+                <li>Camping</li>
+                <li>Elektronik</li>
+                <li>Have og byg</li>
+                <li>Tøj og mode</li>
+                {/* ... */}
+              </ul>
             </div>
+            {/* opret annonce */}
+            <div id='createAd'>
+              <p>Opret annonce</p>
+            </div>
+            {/* nav like list (use navlink) */}
+            <ul>
+              <li>
+                <NavLink to="#">
+                  {/* Mail ikon */}
+                  <img src="/src/assets/images/Important Mail.svg" alt="Mail" />
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="#">
+                  {/* Info ikon */}
+                  <img src="/src/assets/images/Info Squared.svg" alt="Info" />
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={isLoggedIn ? "/minside" : "/login"}
+                  onClick={handleAccountClick}
+                >
+                  {/* Konto ikon, klik går til minside eller login */}
+                  <img src="/src/assets/images/Test Account.svg" alt="Account" />
+                </NavLink>
+              </li>
+            </ul>
           </div>
         </div>
-        {/* kategori navigation */}
-        <nav id='ProductNav'>
-          <ul>
-            {/* mapper kategorier */}
-            {categories.map((cat, idx) => (
-              <li
-                key={cat.slug}
-                className={selectedCategory && selectedCategory.slug === cat.slug ? 'active' : ''}
-                onClick={() => handleCategoryClick(cat)}
-              >
-                {cat.title}
-                {/* pil under valgt kategori */}
-                {selectedIdx === idx && (
-                  <img
-                    src={ArrowImg}
-                    alt="Arrow"
-                    className="nav-arrow"
-                  />
-                )}
-              </li>
-            ))}
-          </ul>
-        </nav>
       </header>
     </div>
   );

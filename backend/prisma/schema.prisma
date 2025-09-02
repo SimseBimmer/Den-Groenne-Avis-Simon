@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int       @id @default(autoincrement()) // -> Primary Key med auto optælling
+  firstname       String    @default("Ikke navngivet")
+  lastname        String    @default("Ikke navngivet")
+  address         String    @default("Ikke navngivet")
+  zipcode         Int       @default(0)
+  city            String    @default("Ikke navngivet")
+  email           String    @unique // -> Unik værdi
+  password        String
+  hasNewsletter   Boolean   @default(false) // -> Bool med default true
+  hasNotification Boolean   @default(false) // -> Bool med default true
+  refreshToken    String
+  isActive        Boolean   @default(true) // -> Bool med default true
+  products        Product[]
+  Comment         Comment[]
+
+  @@map("users") // -> Navn på tabel
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  slug     String
+  products Product[]
+
+  @@map("categories")
+}
+
+model Comment {
+  id        Int    @id @default(autoincrement())
+  comment   String
+  userId    Int
+  productId Int
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("comments")
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  image       String
+  description String  @db.Text // -> Lang tekst
+  price       Decimal @db.Decimal(10, 2) // -> Decimaltal til pris
+  slug        String
+  categoryId  Int
+  userId      Int
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Comment  Comment[]
+
+  @@map("products")
+}
+
+model NewsletterEmail {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("newsletterSubscription")
+}
