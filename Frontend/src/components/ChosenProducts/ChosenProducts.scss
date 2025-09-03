@@ -2,7 +2,7 @@
 
 // Udvalgte produkter sektion
 #chosenProducts {
-    width: 70%;
+    width: 100%;
     margin: 2rem auto;
 
     h2 {
@@ -14,7 +14,6 @@
 
     // container til produkterne
     #chosenProductsRow {
-
         display: flex;
         flex-direction: row;
         gap: .5rem;
@@ -25,7 +24,7 @@
 
         // scrollbar
         scrollbar-width: thin;
-        scrollbar-color: $color-primary-green transparent;
+        scrollbar-color: $color-secondary-green transparent;
 
         &::-webkit-scrollbar-track {
             background: transparent;
@@ -51,7 +50,7 @@
             transition: filter 0.2s;
         }
 
-        // Produkt titel (vises kun ved hover)
+        // Produkt titel
         .productTitle {
             position: absolute;
             text-align: center;
@@ -72,7 +71,6 @@
         }
 
         &:hover {
-
             .productTitle {
                 opacity: 1;
             }

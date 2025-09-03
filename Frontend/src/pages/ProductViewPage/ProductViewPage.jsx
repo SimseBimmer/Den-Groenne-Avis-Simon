@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './ProductViewPage.scss';
+import './ProductsPage.scss';
 import HeaderComponent from '../../components/Header/HeaderComponent.jsx';
 import BreadcrumbNav from '../../components/BreadcrumbNav/BreadcrumbNav.jsx';
 import { useParams } from 'react-router-dom';
-import ColorHeartWhite from '../../assets/images/FavoriteWhite.svg';
 import CommentSection from '../../components/CommentSection/CommentSection.jsx';
 
 export default function ProductViewPage() {

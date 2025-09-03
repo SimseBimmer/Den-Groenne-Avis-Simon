@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./ChosenProducts.scss";
 
-// Komponent til at vise udvalgte produkter (10 tilfældige)
-export default function ChosenProducts() {
+// Komponent til at vise produkter med valgfri titel
+export default function ChosenProducts({ title = "Udvalgte produkter" }) {
   const [products, setProducts] = useState([]);
 
   // Hent produkter fra API ved load
@@ -18,7 +18,7 @@ export default function ChosenProducts() {
 
   return (
     <section id="chosenProducts">
-      <h2>Udvalgte produkter</h2>
+      <h2>{title}</h2>
       <div id="chosenProductsRow">
         {products.map(product => (
           <div className="chosenProduct" key={product.id}>

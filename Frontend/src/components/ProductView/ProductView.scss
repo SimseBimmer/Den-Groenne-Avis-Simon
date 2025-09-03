@@ -1,0 +1,41 @@
+@import '../../styles/variables.scss';
+
+#productView {
+    #backToListBtn {
+        border: none;
+        font-size: 1.1rem;
+        padding: 0.5rem 1.5rem;
+        margin-bottom: 2rem;
+        background: red;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    #productViewBox {
+        margin-left: 5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        #productViewTitle {
+            font-size: 2.4rem;
+            font-weight: 300;
+            margin: 0 0 1.2rem 0;
+            letter-spacing: -1px;
+        }
+
+        #productViewDescription {
+            font-size: 1.1rem;
+            color: $color-text-black;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        #productViewPrice {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+        }
+    }
+}

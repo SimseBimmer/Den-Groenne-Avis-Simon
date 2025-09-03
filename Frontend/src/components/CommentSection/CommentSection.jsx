@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './CommentSection.scss';
-import CommentArrow from '../../assets/images/CommentArrow.svg';
-import UserImg from '../../assets/images/image 1.png';
 
 export default function CommentSection() {
     const [messages, setMessages] = useState([]);

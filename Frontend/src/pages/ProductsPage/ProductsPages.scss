@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Hebrew+Condensed:wght@400;700&display=swap');
+@import '../../styles/variables.scss';
+
+#productsPageContainer {
+    background-color: $color-bg-light;
+
+    #productsMain {
+        width: 70%;
+        margin: 0 auto;
+
+        #productsContentWrapper {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 4rem;
+
+            #productsCategories {
+                width: 200px;
+                margin-right: 2rem;
+
+                nav {
+                    h2 {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                    }
+
+                    ul#categoryList {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+
+                        li {
+                            font-size: 1.3rem;
+                            margin-bottom: 0.5rem;
+                            cursor: pointer;
+                            color: $color-text-black;
+                            font-weight: 400;
+                            border-bottom: 2px solid transparent;
+                            transition: 200ms ease-in-out;
+                            width: fit-content;
+
+                            &#categorySelected {
+                                color: $color-primary-green;
+                                border-bottom: 2px solid #00A676;
+                                font-weight: 600;
+                                margin-left: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            #productsContent {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+
+                #productsList {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                    gap: 2rem;
+                    margin-bottom: 2.5rem;
+                    min-height: 540px;
+                    align-content: flex-start;
+                }
+
+                #productCard {
+                    background: $color-bg-white;
+                    border: none;
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 220px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    position: relative;
+
+                    #productImageBox {
+                        width: 100%;
+                        height: 270px;
+                        position: relative;
+                        border: 2px solid transparent;
+                        transition: border 0.2s;
+
+                        img#productImage {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                            transition: filter 0.2s;
+                        }
+
+                        #productPrice {
+                            position: absolute;
+                            left: 0;
+                            bottom: 0;
+                            width: 100%;
+                            background: #00a676b3;
+                            color: $color-bg-white;
+                            font-size: 1rem;
+                            font-weight: 500;
+                            padding: 0.5rem 0.5rem;
+                            opacity: 0;
+                            transition: opacity 0.2s;
+                            text-align: left;
+                            pointer-events: none;
+                        }
+                    }
+
+                    #productText {
+                        padding: 0.7rem 0.8rem 0.5rem 0.8rem;
+                        background: none;
+
+                        h3#productTitle {
+                            font-size: 1rem;
+                            margin: 0 0 0.2rem 0;
+                            font-weight: bold;
+                            color: $color-text-black;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        p#productDescription {
+                            font-size: 0.95rem;
+                            color: $color-text-black;
+                            margin: 0;
+                            line-height: 1.2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            -webkit-box-orient: vertical;
+                            white-space: normal;
+                            background: none;
+                        }
+                    }
+
+                    &:hover #productImageBox {
+                        border: 2px solid $color-primary-green;
+                    }
+
+                    &:hover #productImageBox #productPrice {
+                        opacity: 1;
+                    }
+                }
+
+                #productsPagination {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    gap: 2rem;
+                    width: fit-content;
+                    margin: 0 0 0 auto;
+
+                    button {
+                        background: none;
+                        border: none;
+                        color: $color-text-black;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        text-decoration: underline;
+                        padding: 0;
+                        opacity: 1;
+                        transition: opacity 0.2s;
+
+                        &:disabled {
+                            opacity: 0.8;
+                            cursor: default;
+                            pointer-events: none;
+                            color: $color-text-black;
+                            text-decoration: underline;
+                        }
+                    }
+
+                    span {
+                        color: $color-text-black;
+                        font-size: 1rem;
+                        min-width: 80px;
+                        text-align: center;
+                        user-select: none;
+                    }
+                }
+            }
+        }
+    }
+}

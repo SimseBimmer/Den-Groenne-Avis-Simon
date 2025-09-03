@@ -1,1 +1,157 @@
 @import '../../styles/variables.scss';
+
+#HeaderComponent {
+  background-color: $color-bg-white;
+  margin: 0 0 7rem 0;
+
+  header {
+    width: 100%;
+    padding: 1.5rem 0;
+
+    #headerContainer {
+      width: 80%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+
+      #siteLogo {
+        a {
+          cursor: pointer;
+          text-decoration: none;
+        }
+
+        h1 {
+          #ptOne {
+            background-color: $color-secondary-green;
+            color: $color-bg-white;
+            border: 2px solid #1DB439;
+            width: fit-content;
+            padding: 0 .25rem;
+          }
+
+          #ptTwo {
+            color: $color-secondary-green;
+            border: 2px solid #1DB439;
+            width: fit-content;
+            padding: 0 .25rem;
+          }
+        }
+      }
+
+      #headerRight {
+        display: flex;
+        gap: 2rem;
+
+        #categoryDropdown {
+          position: relative;
+
+
+          #categorySelection {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            border: 2px solid $color-primary-green;
+            padding: .5rem 1rem;
+            background: $color-bg-white;
+            position: relative;
+
+            p {
+              font-size: 1.1rem;
+              color: $color-text-black;
+              margin: 0;
+              user-select: none;
+            }
+
+            #arrowBtn {
+              background: none;
+              border: none;
+              padding: 0;
+              cursor: pointer;
+              z-index: 2;
+              display: flex;
+              align-items: center;
+              border: 2px solid transparent;
+
+              // Når der er valgt kategori, vis grøn cirkel
+              &:not(:disabled)[style*="pointer-events: auto"] {
+                background: $color-bg-white;
+                border-radius: 50%;
+                border: 2px solid $color-primary-green;
+
+              }
+
+              #expandArrow {
+                width: 20px;
+                height: 20px;
+                transition: 200ms ease-in-out;
+                // Default: ned
+                transform: rotate(0deg);
+              }
+
+              // Når der er valgt kategori, pil til venstre
+              &:not(:disabled)[style*="pointer-events: auto"] #expandArrow {
+                transform: rotate(-90deg);
+              }
+            }
+          }
+
+          #dropdownMenu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: $color-bg-white;
+            z-index: 1;
+            padding: 0.5rem 0;
+            list-style: none;
+
+            border: 2px solid $color-primary-green;
+            min-width: 160px;
+            display: none;
+
+            li {
+              padding: 0.5rem .75rem;
+              margin: 0 .25rem;
+              cursor: pointer;
+              transition: 200ms ease-in-out;
+              border-bottom: 2px solid transparent;
+
+              &:hover {
+                border-bottom: 2px solid $color-primary-green;
+              }
+            }
+          }
+        }
+
+        #createAd {
+          height: fit-content;
+          margin: auto 0;
+          cursor: pointer;
+          border: 2px solid $color-primary-green;
+          background-color: $color-primary-green;
+          padding: .5rem 1rem;
+
+          p {
+            font-size: 1.1rem;
+            color: $color-bg-white;
+            margin: 0;
+          }
+        }
+
+        #headerNavIcons {
+          display: flex;
+          gap: 1.5rem;
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

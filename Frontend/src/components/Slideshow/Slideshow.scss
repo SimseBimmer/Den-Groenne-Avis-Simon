@@ -1,1 +1,34 @@
 @import '../../styles/variables.scss';
+
+// Denne fil skal være TOM, da slideshow-komponenten er slettet og ikke bruges mere.
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slideshow-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+.slideshow-track-2 { width: 200%; }
+.slideshow-track-3 { width: 300%; }
+.slideshow-track-4 { width: 400%; }
+.slideshow-track-5 { width: 500%; }
+// Tilføj flere hvis du får flere billeder
+
+.slideshow-track-2 .slideshow-img { width: 50%; }
+.slideshow-track-3 .slideshow-img { width: 33.3333%; }
+.slideshow-track-4 .slideshow-img { width: 25%; }
+.slideshow-track-5 .slideshow-img { width: 20%; }
+
+.slideshow-img {
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
