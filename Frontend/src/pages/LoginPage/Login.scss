@@ -1,2 +1,206 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Hebrew+Condensed:wght@400;700&display=swap');
 @import '../../styles/variables.scss';
+
+#loginPageContainer {
+
+    #loginPage {
+        width: 70%;
+        margin: 0 auto;
+
+        #loginFormContainer {
+            width: 100%;
+            margin: 4rem auto;
+
+            h2 {
+                text-align: center;
+                font-size: 2.5rem;
+                font-weight: 200;
+            }
+
+            form {
+                width: 50%;
+                margin: 0 auto 14rem auto;
+                display: flex;
+                flex-direction: column;
+
+                label {
+                    display: block;
+                    margin: .75rem 0 .25rem 0;
+                    font-size: 1.2rem;
+                }
+
+                input {
+                    width: 100%;
+                    padding: .5rem 0;
+                    margin: 0;
+                    font-size: 1.3rem;
+                    border: 2px solid $color-primary-green;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                p {
+                    margin: 1rem 0 4rem 0;
+                }
+
+                button {
+                    width: fit-content;
+                    margin: 0 0 0 auto;
+                    background-color: $color-secondary-green;
+                    color: $color-bg-white;
+                    border: none;
+                    padding: .5rem 1.5rem;
+                    font-size: 1.3rem;
+                    cursor: pointer;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
+                #signupFormBottomRow {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    margin-bottom: 2rem;
+
+                    #termsCheckboxWrapper {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+
+                        input[type="checkbox"] {
+                            width: 18px;
+                            height: 18px;
+                            accent-color: $color-primary-green;
+                        }
+
+                        label {
+                            font-size: 1rem;
+                            margin: 0;
+                            cursor: pointer;
+                        }
+                    }
+
+                    button {
+                        margin: 0 0 0 auto;
+                    }
+                }
+
+                #signupError {
+                    color: red;
+                    margin-top: 1rem;
+                }
+                #signupSuccess {
+                    color: green;
+                    margin-top: 1rem;
+                }
+                #loginError {
+                    color: red;
+                    margin-top: 1rem;
+                }
+                #loginSuccess {
+                    color: green;
+                    margin-top: 1rem;
+                }
+            }
+
+            #loginErrorBanner {
+                background: #ffdddd;
+                color: #a80000;
+                border: 2px solid #a80000;
+                border-radius: 5px;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+                font-weight: bold;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+            #loginSuccessBanner {
+                background: #e6ffe6;
+                color: #006b1b;
+                border: 2px solid #00a676;
+                border-radius: 5px;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+                font-weight: bold;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+#donationSection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    width: 100%;
+    margin: 3rem 0 8rem 0;
+
+
+    // containere (1 og 2)
+    #container1,
+    #container2 {
+        position: relative;
+
+        img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            filter: brightness(70%);
+            object-position: center 75%;
+        }
+
+        #textContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+
+            #text {
+                width: 90%;
+                margin: .5rem auto;
+                height: fit-content;
+                color: $color-bg-white;
+
+                h3 {
+                    font-size: 2.5rem;
+                    font-weight: 100;
+                    margin: 0 0 1rem 0;
+                }
+
+                #stoerreTxt {
+                    font-size: 1.7rem;
+                    margin: 0 0 1rem 0;
+                }
+
+                #pris {
+                    color: $color-primary-green;
+                    font-size: 3.5rem;
+                    width: fit-content;
+                    margin: 0 0 1rem auto;
+                }
+
+                #mindreTxt {
+                    font-size: 1.3;
+                }
+            }
+
+        }
+    }
+}

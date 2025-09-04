@@ -1,1 +1,99 @@
 @import '../../styles/variables.scss';
+
+#footerContainer {
+    background: $color-primary-green;
+    color: $color-bg-white;
+    padding: 2.5rem 0 2rem 0;
+    font-size: 1rem;
+}
+
+#footerGrid {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4rem;
+    width: 80%;
+    margin: 0 auto;
+}
+
+#footerNewsletter,
+#footerContact,
+#footerUN {
+    flex: 1;
+    min-width: 220px;
+}
+
+#footerNewsletter h3,
+#footerContact h3,
+#footerUN h3 {
+    margin-bottom: 0.7rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $color-bg-white;
+}
+
+#footerNewsletter p,
+#footerContact p,
+#footerUN p {
+    margin-bottom: 1.1rem;
+    color: $color-bg-white;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+#newsletterForm {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#newsletterInput {
+    flex: 1;
+    padding: 0.5rem 0.7rem;
+    border: none;
+    border-radius: 2px;
+    font-size: 1rem;
+    background: $color-bg-white;
+    color: $color-text-black;
+}
+
+#newsletterBtn {
+    background: $color-secondary-green;
+    color: $color-bg-white;
+    border: none;
+    border-radius: 2px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 200ms ease-in-out;
+    text-decoration: none;
+}
+
+#newsletterBtn:hover {
+    background: darken($color-secondary-green, 8%);
+}
+
+#footerUNLink {
+    color: $color-bg-white;
+    text-decoration: underline;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+#footerUNLink:hover {
+    color: $color-primary-green;
+}
+
+@media (max-width: 900px) {
+    #footerGrid {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 0 1.5rem;
+    }
+
+    #footerNewsletter,
+    #footerContact,
+    #footerUN {
+        min-width: 0;
+    }
+}

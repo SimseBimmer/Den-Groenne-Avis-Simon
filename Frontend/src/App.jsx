@@ -11,7 +11,7 @@ import Kontakt from './pages/ContactPage/Kontakt';
 import Login from './pages/LoginPage/Login';
 import MinSide from './pages/MinSidePage/MinSide.jsx';
 import CreateAccount from './pages/LoginPage/CreateAccount.jsx';
-// component imports 
+import CreateAdPage from './pages/CreateAdPage/CreateAdPage.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -23,7 +23,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/kontakt" element={<Kontakt />} />
         <Route path="/login" element={<Login />} />
         <Route path="/opret" element={<CreateAccount />} />
+        <Route path="/signup" element={<CreateAccount />} />
         <Route path="/minside" element={<MinSide />} />
+        <Route path="/createad" element={<CreateAdPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

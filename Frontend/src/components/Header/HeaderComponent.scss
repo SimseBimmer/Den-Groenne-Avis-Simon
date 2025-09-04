@@ -131,10 +131,17 @@
           background-color: $color-primary-green;
           padding: .5rem 1rem;
 
+          a {
+            text-decoration: none;
+
+          }
+
           p {
             font-size: 1.1rem;
             color: $color-bg-white;
             margin: 0;
+            text-decoration: none;
+
           }
         }
 
@@ -149,9 +156,42 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            position: relative; // For dropdown positioning
+
+            // Konto dropdown menu (samme stil som kategori-dropdown)
+            ul#dropdownMenu {
+              position: absolute;
+              top: 100%;
+              right: 0;
+              left: auto;
+              background: $color-bg-white;
+              z-index: 10;
+              padding: 0.5rem 0;
+              list-style: none;
+              border: 2px solid $color-primary-green;
+              min-width: 160px;
+              display: none;
+
+              li {
+                padding: 0.5rem .75rem;
+                margin: 0 .25rem;
+                cursor: pointer;
+                transition: 200ms ease-in-out;
+                border-bottom: 2px solid transparent;
+
+                &:hover {
+                  border-bottom: 2px solid $color-primary-green;
+                }
+              }
+            }
           }
         }
       }
     }
   }
+}
+
+// Vis dropdown-menu hvis parent har inline style display:block
+#headerNavIcons li ul#dropdownMenu[style*="display: block"] {
+  display: block;
 }

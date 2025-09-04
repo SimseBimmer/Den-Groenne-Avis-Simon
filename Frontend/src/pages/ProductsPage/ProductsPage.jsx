@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import './ProductsPages.scss';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import HeaderComponent from '../../components/Header/HeaderComponent.jsx';
 import FooterComponent from '../../components/Footer/FooterComponent.jsx';
 import GreenDivider from "../../components/GreenDivider/GreenDivider";
 import ProductsGrid from "../../components/ProductsGrid/ProductsGrid";
 import ProductView from "../../components/ProductView/ProductView";
+import ProductComments from "../../components/ProductComments/ProductComments"; 
 
 // Antal produkter per side
 const PRODUCTS_PER_PAGE = 9;
@@ -20,6 +21,7 @@ export default function ProductsPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productLoading, setProductLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Hent alle kategorier fra backend
   useEffect(() => {
@@ -33,18 +35,27 @@ export default function ProductsPage() {
   useEffect(() => {
     setLoading(true);
     let url = "http://localhost:4000/api/products";
-    // Hvis der er valgt kategori, brug slug til at hente produkter fra backend
     if (selectedCategory) {
       url = `http://localhost:4000/api/products/category/${selectedCategory.slug}`;
     }
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        // Sikrer at vi altid får et array
-        if (!Array.isArray(data)) setProducts([]);
-        else setProducts(data);
+        console.log("Products API response:", data);
+        // Hvis backend returnerer { products: [...] }
+        if (Array.isArray(data)) setProducts(data);
+        else if (data && Array.isArray(data.products)) setProducts(data.products);
+        else {
+          setProducts([]);
+          // Vis evt. fejlbesked i UI
+          alert("FEJL: API'et returnerer ikke et array. Se konsollen for detaljer.");
+        }
       })
-      .catch(() => setProducts([]))
+      .catch((err) => {
+        setProducts([]);
+        alert("FEJL: Kunne ikke hente produkter fra API'et");
+        console.error("Fetch error:", err);
+      })
       .finally(() => setLoading(false));
   }, [selectedCategory]);
 
@@ -95,6 +106,20 @@ export default function ProductsPage() {
     if (page < totalPages) setPage(page + 1);
   }
 
+  // Når categories er hentet, tjek om der er slug i location.state og sæt kategori
+  useEffect(() => {
+    if (location.state && location.state.slug && categories.length > 0) {
+      const cat = categories.find(c => c.slug === location.state.slug);
+      if (cat) {
+        setSelectedCategory(cat);
+      } else {
+        setSelectedCategory(null);
+      }
+      // Fjern slug fra state så det ikke loader igen ved navigation
+      navigate("/produkter", { replace: true, state: {} });
+    }
+  }, [location.state, categories, navigate]);
+
   return (
     <div id="productsPageContainer">
       <HeaderComponent />
@@ -103,6 +128,8 @@ export default function ProductsPage() {
         <div id="productsContentWrapper">
           <aside id="productsCategories">
             <nav>
+              {/* Fjern dropdown til kategorier */}
+              {/* Liste med kategorier */}
               <ul id="categoryList">
                 <li
                   id={!selectedCategory ? "categorySelected" : ""}
@@ -133,11 +160,22 @@ export default function ProductsPage() {
           <section id="productsContent">
             {/* Viser enten produktvisning eller grid med produkter */}
             {selectedProduct ? (
-              <ProductView
-                product={selectedProduct}
-                loading={productLoading}
-                onBack={handleBackToList}
-              />
+              <>
+                <ProductView
+                  product={selectedProduct}
+                  loading={productLoading}
+                  onBack={handleBackToList}
+                />
+                {/* Grøn divider under produktvisning */}
+                <GreenDivider />
+                {/* Kommentarsektion under divider */}
+                <ProductComments
+                  productId={selectedProduct.id}
+                  sellerName={selectedProduct.sellerName}
+                  currentUser={JSON.parse(localStorage.getItem('user') || '{}')}
+                  isLoggedIn={!!localStorage.getItem('accessToken')}
+                />
+              </>
             ) : (
               <ProductsGrid
                 products={paginatedProducts}

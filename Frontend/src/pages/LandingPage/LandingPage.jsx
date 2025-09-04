@@ -87,9 +87,10 @@ export default function LandingPage() {
           </div>
 
         </section>
-        <FooterComponent />
 
       </div>
+      <FooterComponent />
+
     </div>
   );
 }

@@ -10,11 +10,15 @@ export const Authenticate = async (req: Request, res: Response): Promise<void> =
     
     if (!username || !password) {
         res.status(400).json({ message: "Missing credentials" });
+        return;
     }
 
     try {
         const result = await authenticateUser(username, password);        
-        if (!result) res.sendStatus(401);
+        if (!result) {
+            res.sendStatus(401);
+            return;
+        }
         res.json(result);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -51,3 +55,4 @@ export const getUserFromToken = (req: Request, res: Response) => {
 
     res.json({ userId });
 };
+

@@ -12,7 +12,9 @@ export const getRecords = async (req: Request, res: Response) => {
         }
       },
       select: {
+        id: true,
         comment: true,
+        userId: true, 
         user: {
           select: {
             firstname: true,

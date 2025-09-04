@@ -9,7 +9,8 @@ export const getRecords = async (req: Request, res: Response) => {
         name: true,
         slug: true,
         image: true,
-        price: true
+        price: true,
+        userId: true // tilføjet så frontend kan filtrere på bruger
       }
     });
     res.json(data);
@@ -33,7 +34,8 @@ export const getRecordsFromCategory = async (req: Request, res: Response) => {
         name: true,
         slug: true,
         image: true,
-        price: true
+        price: true,
+        userId: true // tilføjet her også
       }
     })
     res.json(data);

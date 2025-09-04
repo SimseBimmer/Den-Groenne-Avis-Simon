@@ -1,141 +1,166 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CommentSection.scss';
 
-export default function CommentSection() {
-    const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState('');
-    const [loadingMsg, setLoadingMsg] = useState(false);
-    const [msgError, setMsgError] = useState('');
-    const [msgSuccess, setMsgSuccess] = useState('');
-    const [refresh, setRefresh] = useState(0);
-    const [open, setOpen] = useState(false);
-    const textareaRef = useRef(null);
+// Kommentar-komponent til produkt
+export default function CommentSection({ productId, sellerId }) {
+  // State til kommentarer
+  const [comments, setComments] = useState([]);
+  // State til tekstfeltet
+  const [commentText, setCommentText] = useState('');
+  // State til loading og fejl
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  // State til bruger
+  const [user, setUser] = useState(null);
 
-    // Hent alle beskeder (ingen filter på produkt)
-    useEffect(() => {
-        fetch('http://localhost:3000/api/messages')
-            .then(res => res.json())
-            .then(async data => {
-                // Hent detaljer for alle beskeder
-                const detailed = await Promise.all(
-                    data.map(async msg =>
-                        fetch(`http://localhost:3000/api/messages/${msg.id}`)
-                            .then(res => res.json())
-                            .catch(() => null)
-                    )
-                );
-                setMessages(detailed.filter(Boolean));
-            })
-            .catch(() => setMessages([]));
-    }, [refresh]);
+  // Hent bruger fra localStorage
+  useEffect(() => {
+    const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (localUser && localUser.id) {
+      setUser(localUser);
+    } else {
+      setUser(null);
+    }
+  }, []);
 
-    function handleCommentSubmit(e) {
-        e.preventDefault();
-        setMsgError('');
-        setMsgSuccess('');
-        setLoadingMsg(true);
+  // Hent kommentarer fra backend
+  useEffect(() => {
+    setLoading(true);
+    fetch(`http://localhost:4000/api/comments/${productId}`)
+      .then(res => res.json())
+      .then(data => setComments(data))
+      .catch(() => setComments([]))
+      .finally(() => setLoading(false));
+  }, [productId]);
 
-        // Dummy user info
-        let name = "Bruger";
-        let email = "bruger@eksempel.dk";
-        try {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user && user.name) name = user.name;
-            if (user && user.email) email = user.email;
-        } catch {}
-
-        fetch('http://localhost:3000/api/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name,
-                email,
-                message: newMessage
-            })
+  // Send kommentar
+  async function handleSendComment(e) {
+    e.preventDefault();
+    setError('');
+    if (!commentText.trim()) {
+      setError('Du skal skrive en besked');
+      return;
+    }
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      setError('Du skal være logget ind for at skrive en kommentar');
+      return;
+    }
+    try {
+      const res = await fetch('http://localhost:4000/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          comment: commentText,
+          productId: productId
         })
-            .then(res => {
-                if (!res.ok) throw new Error('Kunne ikke sende kommentar');
-                return res.json();
-            })
-            .then(() => {
-                setMsgSuccess('Kommentar sendt!');
-                setNewMessage('');
-                setRefresh(r => r + 1);
-                setOpen(false);
-            })
-            .catch(() => setMsgError('Kunne ikke sende kommentar'));
-        setLoadingMsg(false);
+      });
+      if (!res.ok) {
+        setError('Kunne ikke sende besked');
+        return;
+      }
+      setCommentText('');
+      fetch(`http://localhost:4000/api/comments/${productId}`)
+        .then(res => res.json())
+        .then(data => setComments(data));
+    } catch {
+      setError('Kunne ikke sende besked');
     }
+  }
 
-    const isLoggedIn = !!localStorage.getItem('accessToken');
-
-    function handleArrowClick() {
-        setOpen(o => !o);
-    }
-
-    function handleKeyDown(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (newMessage.trim()) handleCommentSubmit(e);
+  // Slet kommentar
+  async function handleDeleteComment(index) {
+    const accessToken = localStorage.getItem('accessToken');
+    const commentId = comments[index].id;
+    try {
+      const res = await fetch(`http://localhost:4000/api/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {})
         }
+      });
+      if (!res.ok) throw new Error();
+      // Fjern kommentaren fra listen
+      setComments(comments.filter((_, i) => i !== index));
+    } catch {
+      setError('Kunne ikke slette kommentar');
     }
+  }
 
-    return (
-        <section id="commentSection">
-            <div className="commentHeaderRow">
-                <h3>Kommentarer</h3>
-                {isLoggedIn && (
+  // Hjælpefunktion til at formatere dato
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const year = d.getFullYear();
+    const hour = d.getHours().toString().padStart(2, '0');
+    const min = d.getMinutes().toString().padStart(2, '0');
+    return `d. ${day}/${month} kl. ${hour}.${min}`;
+  }
+
+  return (
+    <div id="commentSectionContainer">
+      <h2 id="commentSectionTitle">Kontakt sælger</h2>
+      {/* Kun tekstfelt hvis man er logget ind */}
+      {user ? (
+        <form id="commentForm" onSubmit={handleSendComment}>
+          <textarea
+            id="commentTextarea"
+            placeholder="Skriv en besked til sælger....."
+            value={commentText}
+            onChange={e => setCommentText(e.target.value)}
+            rows={5}
+          />
+          <button id="commentSendBtn" type="submit">send</button>
+          {error && <div id="commentError">{error}</div>}
+        </form>
+      ) : (
+        <div id="commentLoginBox">
+          <p>Du skal være logget ind for at skrive en besked</p>
+          <button id="commentLoginBtn" onClick={() => window.location.href = "/login"}>Log ind</button>
+        </div>
+      )}
+      {/* Chatten - vises for alle */}
+      <div id="commentChat">
+        {loading ? (
+          <div>Indlæser kommentarer...</div>
+        ) : (
+          comments.map((c, i) => {
+            // Tjek om det er sælgeren
+            const isSeller = c.user && c.user.id === sellerId;
+            // Tjek om det er den aktuelle bruger
+            const isOwnComment = user && c.user && c.user.id === user.id;
+            return (
+              <div
+                key={i}
+                className={isSeller ? "commentSeller" : "commentBuyer"}
+              >
+                <p className="commentMeta">
+                  {c.user
+                    ? `${c.user.firstname}${isSeller ? " (sælger)" : ""}, ${formatDate(c.createdAt)}`
+                    : ""}
+                </p>
+                <div className="commentBox">
+                  <span>{c.comment}</span>
+                  {isOwnComment && (
                     <button
-                        id="commentArrowBtn"
-                        className={open ? 'open' : ''}
-                        onClick={handleArrowClick}
-                        aria-label="Skriv kommentar"
-                        type="button"
+                      className="commentDeleteBtn"
+                      onClick={() => handleDeleteComment(i)}
                     >
-                        <img src={CommentArrow} alt="Åbn kommentar" />
+                      slet kommentar
                     </button>
-                )}
-            </div>
-            {isLoggedIn && (
-                <form
-                    id="commentForm"
-                    className={open ? 'open' : ''}
-                    onSubmit={handleCommentSubmit}
-                    style={{ display: open ? 'flex' : 'none' }}
-                >
-                    <textarea
-                        id="commentInput"
-                        placeholder="Skriv en kommentar..."
-                        value={newMessage}
-                        onChange={e => setNewMessage(e.target.value)}
-                        rows={3}
-                        ref={textareaRef}
-                        onKeyDown={handleKeyDown}
-                        required
-                    />
-                    <button type="submit" disabled={loadingMsg || !newMessage.trim()}>Send</button>
-                    {msgError && <div className="commentError">{msgError}</div>}
-                    {msgSuccess && <div className="commentSuccess">{msgSuccess}</div>}
-                </form>
-            )}
-            {!isLoggedIn && (
-                <div className="commentLoginMsg">Du skal være logget ind for at kommentere.</div>
-            )}
-            <ul id="commentList">
-                {messages.length === 0 ? (
-                    <li>Ingen kommentarer endnu.</li>
-                ) : (
-                    messages.map(msg => (
-                        <li key={msg.id} className="commentItem">
-                            <img src={UserImg} alt="Bruger" className="commentUserImg" />
-                            <div>
-                                <div className="commentUserName">{msg.name}</div>
-                                <div className="commentText">{msg.message}</div>
-                            </div>
-                        </li>
-                    ))
-                )}
-            </ul>
-        </section>
-    );
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
 }
+
+

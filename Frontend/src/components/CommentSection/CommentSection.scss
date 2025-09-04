@@ -1,1 +1,142 @@
 @import '../../styles/variables.scss';
+
+#commentSectionContainer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 0 2rem 0;
+
+  #commentSectionTitle {
+    text-align: center;
+    color: $color-primary-green;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+
+  #commentForm {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+
+    #commentTextarea {
+      width: 100%;
+      min-height: 120px;
+      border: 2px solid #00a67680;
+      border-radius: 2px;
+      font-size: 1.1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      resize: vertical;
+      background: $color-bg-white;
+      color: $color-text-black;
+    }
+
+    #commentSendBtn {
+      background: $color-primary-green;
+      color: $color-bg-white;
+      border: none;
+      padding: 0.5rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 2px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      transition: background 0.2s;
+      &:hover {
+        background: darken($color-primary-green, 10%);
+      }
+    }
+
+    #commentError {
+      color: #d32f2f;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      text-align: right;
+    }
+  }
+
+  #commentLoginBox {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    #commentLoginBtn {
+      background: $color-primary-green;
+      color: $color-bg-white;
+      border: none;
+      padding: 0.5rem 2rem;
+      font-size: 1.1rem;
+      border-radius: 2px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+      &:hover {
+        background: darken($color-primary-green, 10%);
+      }
+    }
+  }
+
+  #commentChat {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .commentSeller,
+    .commentBuyer {
+      width: fit-content;
+      max-width: 60%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .commentSeller {
+      margin: 0 auto 0 0;
+    }
+    .commentBuyer {
+      margin: 0 0 0 auto;
+    }
+
+    .commentMeta {
+      font-size: 0.95rem;
+      color: $color-text-black;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+
+    .commentBox {
+      border: 2px solid #00a67680;
+      background: $color-bg-white;
+      padding: 1rem;
+      border-radius: 2px;
+      font-size: 1.1rem;
+      color: $color-text-black;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .commentDeleteBtn {
+      background: none;
+      border: none;
+      color: #d32f2f;
+      font-size: 1rem;
+      cursor: pointer;
+      align-self: flex-end;
+      margin-top: 0.5rem;
+      text-decoration: underline;
+      font-weight: 500;
+      padding: 0;
+      transition: color 0.2s;
+      &:hover {
+        color: darken(#d32f2f, 10%);
+      }
+    }
+  }
+}

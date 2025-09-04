@@ -1,66 +1,123 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import './HeaderComponent.scss';
 
 // Header til toppen af siden
 export default function HeaderComponent() {
   const navigate = useNavigate();
 
-  // Dummy login check
-  const isLoggedIn = false;
+  // Tjekker om man er logget ind
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('accessToken'));
 
-  // Dropdown åben/lukket
+  // Dropdown til kategorier
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Kategorier fra API
   const [categories, setCategories] = useState([]);
+  const accountDropdownRef = useRef(null);
 
   // Valgt kategori
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Hent kategorier fra backend
+  // Dropdown til konto
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+
+  // Henter kategorier fra backend
   useEffect(() => {
     fetch('http://localhost:4000/api/categories')
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => {
-        // Fejl hvis noget går galt
+        // Hvis der sker fejl
         console.error("Kunne ikke hente kategorier", err);
       });
   }, []);
 
-  // Åbn/luk dropdown
+  // Opdaterer login status hvis localStorage ændres
+  useEffect(() => {
+    function handleLoginStatusChanged() {
+      setIsLoggedIn(!!localStorage.getItem('accessToken'));
+    }
+    window.addEventListener('loginStatusChanged', handleLoginStatusChanged);
+    return () => window.removeEventListener('loginStatusChanged', handleLoginStatusChanged);
+  }, []);
+
+  // Lukker konto-dropdown hvis man klikker udenfor
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        accountDropdownRef.current &&
+        !accountDropdownRef.current.contains(event.target)
+      ) {
+        setIsAccountDropdownOpen(false);
+      }
+    }
+    if (isAccountDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isAccountDropdownOpen]);
+
+  // Åbner/lukker kategori-dropdown
   function handleDropdownClick() {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
-  // Vælg kategori (også "Alle kategorier")
+  // Vælger en kategori
   function handleCategorySelect(category) {
     setSelectedCategory(category);
     setIsDropdownOpen(false);
   }
 
-  // Vælg "Alle kategorier"
+  // Vælger "Alle kategorier"
   function handleAllCategoriesSelect() {
     setSelectedCategory({ id: 'all', name: 'Alle kategorier', slug: '' });
     setIsDropdownOpen(false);
   }
 
-  // Klik på pilen: naviger til produkter med valgt kategori
+  // Trykker på pilen - går til produkter med valgt kategori
   function handleArrowClick(e) {
     e.stopPropagation();
-    // Naviger til produkter, send valgt kategori (kan være null eller "alle")
-    navigate('/produkter', { state: { selectedCategory } });
+    if (selectedCategory && selectedCategory.slug) {
+      navigate('/produkter', { state: { slug: selectedCategory.slug } });
+    } else {
+      navigate('/produkter');
+    }
   }
 
   // Konto-ikon klik
   function handleAccountClick(e) {
     e.preventDefault();
-    if (isLoggedIn) {
-      navigate("/minside");
-    } else {
-      navigate("/login");
-    }
+    setIsAccountDropdownOpen((open) => !open);
+  }
+
+  // Login klik
+  function handleLoginClick() {
+    setIsAccountDropdownOpen(false);
+    navigate("/login");
+  }
+
+  // Signup klik
+  function handleSignupClick() {
+    setIsAccountDropdownOpen(false);
+    navigate("/signup");
+  }
+
+  // Min side klik
+  function handleMyAccountClick() {
+    setIsAccountDropdownOpen(false);
+    navigate("/minside");
+  }
+
+  // Log ud
+  function handleLogout() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+    window.dispatchEvent(new Event('loginStatusChanged'));
+    setIsAccountDropdownOpen(false);
+    window.location.href = '/';
   }
 
   return (
@@ -80,7 +137,6 @@ export default function HeaderComponent() {
               <div
                 id="categorySelection"
                 onClick={handleDropdownClick}
-              // Dropdown åbner altid, pilen kan kun trykkes hvis kategori valgt
               >
                 <p>
                   {selectedCategory ? selectedCategory.name : "Vælg kategori"}
@@ -120,7 +176,9 @@ export default function HeaderComponent() {
               </ul>
             </div>
             <div id="createAd">
-              <p>Opret annonce</p>
+              <Link to="/createad">
+                <p>Opret annonce</p>
+              </Link>
             </div>
             <ul id="headerNavIcons">
               <li>
@@ -133,13 +191,46 @@ export default function HeaderComponent() {
                   <img src="/src/assets/images/Info Squared.svg" alt="Info" />
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  to={isLoggedIn ? "/minside" : "/login"}
+              <li ref={accountDropdownRef} style={{ position: "relative" }}>
+                {/* Konto ikon klik åbner dropdown */}
+                <button
+                  id="accountBtn"
                   onClick={handleAccountClick}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer"
+                  }}
+                  aria-label="Konto"
+                  type="button"
                 >
                   <img src="/src/assets/images/Test Account.svg" alt="Account" />
-                </NavLink>
+                </button>
+                {/* Dropdown menu for konto */}
+                <ul
+                  id="dropdownMenu"
+                  style={{
+                    display: isAccountDropdownOpen ? 'block' : 'none',
+                    position: 'absolute',
+                    top: '100%',
+                    right: 0,
+                    left: 'auto',
+                    zIndex: 10
+                  }}
+                >
+                  {!isLoggedIn ? (
+                    <>
+                      <li onClick={handleLoginClick}>Login</li>
+                      <li onClick={handleSignupClick}>Sign up</li>
+                    </>
+                  ) : (
+                    <>
+                      <li onClick={handleMyAccountClick}>Min side</li>
+                      <li onClick={handleLogout}>Log ud</li>
+                    </>
+                  )}
+                </ul>
               </li>
             </ul>
           </div>

@@ -1,2 +1,93 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Hebrew+Condensed:wght@400;700&display=swap');
 @import '../../styles/variables.scss';
+@import '../LoginPage/Login.scss';
+
+#createAdPageContainer {
+    background: $color-bg-light;
+    width: 100%;
+    #createAdPage {
+        width: 70%;
+        margin: 0 auto;
+
+        #loginFormContainer {
+            width: 100%;
+            margin: 4rem auto;
+
+            h2 {
+                text-align: center;
+                font-size: 2.5rem;
+                font-weight: 200;
+            }
+
+            form {
+                width: 50%;
+                margin: 0 auto 14rem auto;
+                display: flex;
+                flex-direction: column;
+
+                label {
+                    display: block;
+                    margin: .75rem 0 .25rem 0;
+                    font-size: 1.2rem;
+                }
+
+                input,
+                select,
+                textarea {
+                    width: 100%;
+                    padding: .5rem 0;
+                    margin: 0;
+                    font-size: 1.3rem;
+                    border: 2px solid $color-primary-green;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                textarea {
+                    resize: NONE;
+                    min-height: 200px;
+                }
+
+                button {
+                    width: fit-content;
+                    margin: 2rem 0 0 auto;
+                    background-color: $color-secondary-green;
+                    color: $color-bg-white;
+                    border: none;
+                    padding: .5rem 1.5rem;
+                    font-size: 1.3rem;
+                    cursor: pointer;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            #loginErrorBanner {
+                background: #ffdddd;
+                color: #a80000;
+                border: 2px solid #a80000;
+                border-radius: 5px;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+                font-weight: bold;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+            #loginSuccessBanner {
+                background: #e6ffe6;
+                color: #006b1b;
+                border: 2px solid #00a676;
+                border-radius: 5px;
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+                font-weight: bold;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+        }
+    }
+}
