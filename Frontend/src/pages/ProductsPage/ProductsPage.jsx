@@ -6,7 +6,7 @@ import FooterComponent from '../../components/Footer/FooterComponent.jsx';
 import GreenDivider from "../../components/GreenDivider/GreenDivider";
 import ProductsGrid from "../../components/ProductsGrid/ProductsGrid";
 import ProductView from "../../components/ProductView/ProductView";
-import ProductComments from "../../components/ProductComments/ProductComments"; 
+import ProductComments from "../../components/ProductComments/ProductComments";
 
 // Antal produkter per side
 const PRODUCTS_PER_PAGE = 9;
@@ -118,6 +118,17 @@ export default function ProductsPage() {
       // Fjern slug fra state så det ikke loader igen ved navigation
       navigate("/produkter", { replace: true, state: {} });
     }
+    // NYT: Tjek om der er productSlug og åbn produktvisning
+    if (location.state && location.state.productSlug) {
+      setProductLoading(true);
+      fetch(`http://localhost:4000/api/products/${encodeURIComponent(location.state.productSlug)}`)
+        .then(res => res.json())
+        .then(data => setSelectedProduct(data))
+        .catch(() => setSelectedProduct(null))
+        .finally(() => setProductLoading(false));
+      // Fjern productSlug fra state så det ikke loader igen ved navigation
+      navigate("/produkter", { replace: true, state: {} });
+    }
   }, [location.state, categories, navigate]);
 
   return (
@@ -166,15 +177,8 @@ export default function ProductsPage() {
                   loading={productLoading}
                   onBack={handleBackToList}
                 />
-                {/* Grøn divider under produktvisning */}
-                <GreenDivider />
-                {/* Kommentarsektion under divider */}
-                <ProductComments
-                  productId={selectedProduct.id}
-                  sellerName={selectedProduct.sellerName}
-                  currentUser={JSON.parse(localStorage.getItem('user') || '{}')}
-                  isLoggedIn={!!localStorage.getItem('accessToken')}
-                />
+                {/* kommentar skulle have været her */}
+
               </>
             ) : (
               <ProductsGrid
